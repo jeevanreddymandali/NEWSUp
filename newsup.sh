@@ -2,13 +2,15 @@
 
 USERNAME=$(whoami)
 
+wget -q https://www.dropbox.com/s/c7sc9rapd7rmdaz/newsup_logo.jpeg?dl=0 -P /home/$USERNAME/
+
 news() {
-action=$(yad --width 400 --height 200 --title="news in shorts" \
+action=$(yad --width 400 --height 200 --title="news in shorts" --image="/home/$USERNAME/newsup_logo.jpeg?dl=0" --center --buttons-layout=spread --licon=/home/$USERNAME/NEWSUp_1.0/images.jpeg --text-align=fill \
 --form --item-separator="," \
 --field="Channel":CB \
 --field="NEWS Type":CB \
 --button=$"Get NEWS:2" \
---button=$"Enough news for today:3" \
+--button=$"Enough NEWS For Now:3" \
 "Latest Headlines,World,Entertainment,Science & Tech,Sports" "Fox,CNN,India Today")
 
 newsret=$?
@@ -16,9 +18,18 @@ echo "news return is" $newsret
 
 echo $action >> /home/$USERNAME/yad.txt
 
+if [ $newsret -eq 252 ]
+then
+rm /home/$USERNAME/yad.txt
+rm /home/$USERNAME/newsup_logo.jpeg?dl=0
+exit 1
+
+fi 
+
 if [ $newsret -eq 3 ]
 then
 rm /home/$USERNAME/yad.txt
+rm /home/$USERNAME/newsup_logo.jpeg?dl=0
 exit 1
 
 fi 
@@ -365,5 +376,8 @@ getfeedsportscnn()
 echo "calling news 1"
 
 news
+
+
+
 
 rm /home/$USERNAME/yad.txt
